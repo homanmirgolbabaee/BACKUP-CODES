@@ -1,0 +1,683 @@
+/**************************************************************************/
+/*                            General events                             **/
+/**************************************************************************/
+
+/** Back to top button **/
+var scrool_top_pos;
+$(window).scroll(function () {
+    scrool_top_pos = $(window).scrollTop();
+    if (scrool_top_pos > 1000) {
+        $('.back_to_top').fadeIn();
+    } else {
+        $('.back_to_top').fadeOut();
+    }
+
+
+    /* fixed header */
+    if (scrool_top_pos > 500) {
+        // $('header > div').eq(0).addClass('fixed_header');
+    } else {
+        // $('header > div').eq(0).addClass('fixed_header');
+    }
+
+});
+
+
+/**************************************************************************/
+/*                             Resize events                             **/
+/**************************************************************************/
+$(window).resize(function () {
+    tab_recreat();
+});
+
+
+/**************************************************************************/
+/*                          Predefined functions                         **/
+/**************************************************************************/
+$.fn.animateRotate = function (angle, duration, easing, complete) {
+    var args = $.speed(duration, easing, complete);
+    var step = args.step;
+    return this.each(function (i, e) {
+        args.complete = $.proxy(args.complete, e);
+        args.step = function (now) {
+            $.style(e, 'transform', 'rotate(' + now + 'deg)');
+            $.style(e, '-webkit-transform', 'rotate(' + now + 'deg)');
+            $.style(e, '-moz-transform', 'rotate(' + now + 'deg)');
+            $.style(e, '-ms-transform', 'rotate(' + now + 'deg)');
+            if (step) return step.apply(e, arguments);
+        };
+        $({deg: 0}).animate({deg: angle}, args);
+    });
+};
+
+/* function to make numbers Farsi */
+function fa_num(arg) {
+    arg = arg.replaceAll("1", "۱");
+    arg = arg.replaceAll("2", "۲");
+    arg = arg.replaceAll("3", "۳");
+    arg = arg.replaceAll("4", "۴");
+    arg = arg.replaceAll("5", "۵");
+    arg = arg.replaceAll("6", "۶");
+    arg = arg.replaceAll("7", "۷");
+    arg = arg.replaceAll("8", "۸");
+    arg = arg.replaceAll("9", "۹");
+    arg = arg.replaceAll("0", "۰");
+    return arg;
+}
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+String.prototype.replaceAll = function (search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
+
+/** function to get query string **/
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
+
+
+/** check if its number **/
+function isNumberKey(evt) {
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+        return false;
+    return true;
+}
+function IsNumeric(sText) {
+    var ValidChars = "0123456789.";
+    var IsNumber = true;
+    var Char;
+    for (var i = 0; i < sText.length && IsNumber == true; i++) {
+        Char = sText.charAt(i);
+        if (ValidChars.indexOf(Char) == -1) {
+            IsNumber = false;
+        }
+    }
+    return IsNumber;
+}
+
+
+/**************************************************************************/
+/*                         Document on ready state                       **/
+/**************************************************************************/
+$(document).ready(function () {
+
+    /** Change upper menu class when activated **/
+    $('.upper_menu  a').each(function () {
+        if (window.location.href == 'http:'+$(this).attr('href')) {
+            $(this).find('div').addClass('active_upper_menu');
+        }
+    });
+    $('.dropdown-menu  a').each(function () {
+        if (window.location.href == 'http:'+$(this).attr('href')) {
+            $(this).parent().parent().parent('div').addClass('active_upper_menu');
+            $(this).parent('li').addClass('active_drop_down');
+        }
+    });
+
+
+    /** Change upper menu class when activated (for mobile) **/
+    $('.upper_menu_mobile_container  a').each(function () {
+        if (window.location.href == $(this).attr('href')) {
+            $(this).find('div').addClass('upper_menu_item_mobile_active');
+        }
+    });
+    $('.upper_menu_item_mobile_dropdown_container  a').each(function () {
+        if (window.location.href == $(this).attr('href')) {
+            $(this).parent().prev('div').addClass('upper_menu_item_mobile_active');
+            $(this).find('div').addClass('upper_menu_item_mobile_dropdown_item_active');
+        }
+    });
+
+
+    /** function to convert eng numbers to persian **/
+    $('.fa_num').each(function () {
+        var output_string_fanum = $(this).html();
+        output_string_fanum = output_string_fanum.replaceAll("1", "۱");
+        output_string_fanum = output_string_fanum.replaceAll("2", "۲");
+        output_string_fanum = output_string_fanum.replaceAll("3", "۳");
+        output_string_fanum = output_string_fanum.replaceAll("4", "۴");
+        output_string_fanum = output_string_fanum.replaceAll("5", "۵");
+        output_string_fanum = output_string_fanum.replaceAll("6", "۶");
+        output_string_fanum = output_string_fanum.replaceAll("7", "۷");
+        output_string_fanum = output_string_fanum.replaceAll("8", "۸");
+        output_string_fanum = output_string_fanum.replaceAll("9", "۹");
+        output_string_fanum = output_string_fanum.replaceAll("0", "۰");
+        $(this).html(output_string_fanum);
+    });
+
+
+    /** Format tabs **/
+    tab_recreat();
+
+    /** trigger tooltip **/
+    $('[data-toggle="tooltip"]').tooltip();
+
+
+    /** Slide bar on the left side **/
+    menu_toggle = false;
+    $('.menu_toggle,.menu_toggle_small').click(function () {
+        if (menu_toggle == false) {
+            $('body').css({'overflow': 'hidden'});
+            $('.wrap').css({'position': 'fixed', 'width': '100%'});
+            $('.wrap').animate({'left': '220px'}, 300);
+            $('.side_bar_menu').animate({'left': '0px'}, 300, function () {
+                menu_toggle = true;
+            });
+
+            //$('.menu_toggle_small').addClass('menu_toggle_small_close');  
+            $('.menu_toggle,.menu_toggle_small').animateRotate(90, 400);
+            window.history.pushState('forward', null, '');
+        } else {
+            $('body').css({'overflow': 'initial'});
+            $('.wrap').animate({'left': '0px'}, 300);
+            $('.upper_dark_ribbon').animate({'left': '0px'}, 300);
+            $('.side_bar_menu').animate({'left': '-220px'}, 300, function () {
+                $('.wrap').css({'position': 'static'});
+            });
+            $('.menu_toggle_small').css({'background-color': ''});
+            $('.menu_toggle_small').removeClass('menu_toggle_small_close');
+            $('.menu_toggle,.menu_toggle_small').animateRotate(0);
+            menu_toggle = false;
+            history.back();
+        }
+
+    });
+
+    /** On Wrap click events **/
+    $('.wrap').click(function () {
+        if (menu_toggle == true) {
+            $('.menu_toggle_small').click();
+        }
+        $('.pol_username_hover').hide();
+        pol_username_cond = false;
+    });
+
+
+    /** Check if its number **/
+    $('input.number').on('keypress', function () {
+        return isNumberKey(event);
+    });
+
+
+    /** Activate tooltip **/
+    qp_design_tooltip();
+
+
+    /* Scroll to specific section by id */
+    if (getParameterByName('section') != undefined) {
+        setTimeout(function () {
+            $('html, body').animate({
+                scrollTop: $('#' + getParameterByName('section')).offset().top
+            }, 700);
+        }, 1000);
+    }
+    /* Activate tab with special data-target */
+    if (getParameterByName('tab') != undefined) {
+        setTimeout(function () {
+            $('.default_tab[data-target="' + getParameterByName('tab') + '"]').click();
+        }, 1000);
+    }
+
+
+});
+
+
+/**************************************************************************/
+/*                               Other Actions                           **/
+/**************************************************************************/
+/** Control backbutton **/
+jQuery(document).ready(function ($) {
+    if (window.history && window.history.pushState) {
+        $(window).on('popstate', function () {
+            $('body').css({'overflow': 'initial'});
+            $('.wrap').animate({'left': '0px', 'top': '0px'}, 300);
+            $('.side_bar_menu').animate({'left': '-220px'}, 300, function () {
+                $('.wrap').css({'position': 'static'});
+            });
+            $('.upper_dark_ribbon').animate({'left': '0px'}, 300);
+            $('.menu_toggle_small').css({'background-color': ''});
+            $('.menu_toggle_small').removeClass('menu_toggle_small_close');
+            $('.menu_toggle,.menu_toggle_small').animateRotate(0);
+            menu_toggle = false;
+        });
+    }
+});
+
+
+/** upper menu mobile version **/
+$(document).on('click', '.upper_menu_mobile_title', function () {
+    $('.upper_menu_mobile_container').slideToggle();
+});
+$(document).on('click', '.upper_menu_item_mobile_dropdown', function () {
+    $(this).next('.upper_menu_item_mobile_dropdown_container').slideToggle();
+});
+
+/** account pop up **/
+var pol_username_cond = false;
+$(document).on('click', '#pol_username', function () {
+    if (pol_username_cond == false) {
+        $('.pol_username_hover').show();
+        pol_username_cond = true;
+    } else {
+        $('.pol_username_hover').hide();
+        pol_username_cond = false;
+    }
+});
+
+/**************************************************************************/
+/*                             Custome Alert                             **/
+/**************************************************************************/
+window.alert = function (content, title) {
+    title = typeof title !== 'undefined' ? title : '';
+    if (!($('.qp_black_background')[0])) {
+        $('body').prepend('<div class="qp_black_background" ></div>');
+        $('body').prepend('<div class="qp_alert_mainbox"><div class="qp_alert_mainbox_header"><img class="qp_alert_mainbox_close" src="data:image/gif;base64,R0lGODlhEAAQALMPAKqqqoaGhpycnNzc3LW1tcjIyOXl5XFxcc7OzqOjo5eXl5SUlL+/v8DAwPj4+P///yH5BAEAAA8ALAAAAAAQABAAAASA8MlJ60TKWKPQLEqTUZxYSEvDNIv2GCnDLBKyEARrwA2+eA8HIoBjBAIMXADhmAiJgBWAsGxSnoAsIFCwVgbERGI7sDwGh4ZgnWgcyhQ0Y304rBnvCVqkOBQKBwoKeHBpCwt+Dg6Ah24SAAeIXRKLkQcJlAmJV4AJXg4DXk4GVhEAOw==" /> <span>' + title + '<span></div><div class="qp_alert_mainbox_container"></div></div>');
+        $('.qp_black_background , .qp_alert_mainbox_close').click(function () {
+            qp_design_alert_close();
+        });
+    }
+    $('.qp_black_background').fadeIn(300, function () {
+        $('.qp_alert_mainbox').css({'display': 'block'}).animate({'opacity': '1', 'margin-top': '0px'})
+    });
+    $('.qp_alert_mainbox .qp_alert_mainbox_container').html(content);
+    $('.qp_alert_mainbox_header span').html(title);
+    $('.qp_alert_mainbox').css({
+        'left': (($(window).width() - $('.qp_alert_mainbox').width()) / 2),
+        'top': (($(window).height() - $('.qp_alert_mainbox').height()) / 2)
+    });
+
+}
+function qp_design_alert_close() {
+    $('.qp_alert_mainbox').animate({'opacity': '0', 'margin-top': '50px'}, 300, function () {
+        $('.qp_black_background').fadeOut(300, function () {
+            $('.qp_alert_mainbox,.qp_black_background').remove();
+        });
+    });
+}
+
+
+/**************************************************************************/
+/*                                   Tabs                                 */
+/**************************************************************************/
+function tab_recreat() {
+    if ($(window).width() < 768) {
+        $('.default_tabs_head').each(function () {
+            var default_tabs_counter = 0;
+            $(this).find('div').each(function () {
+                default_tabs_counter++;
+            });
+            if (default_tabs_counter % 2 == 1) {
+                $(this).find('div:first').css({'width': '98%'});
+            }
+        });
+    } else {
+        $('.default_tabs_head').each(function () {
+            var default_tabs_counter = 0;
+            $(this).find('div').each(function () {
+                default_tabs_counter++;
+            });
+            if (default_tabs_counter % 2 == 1) {
+                $(this).find('div:first').css({'width': ''});
+            }
+        });
+    }
+}
+$(document).on('click', '.default_tab', function () {
+    var tab_clicked = $(this);
+    var tab_target = $(this).data('target');
+    $('.default_tab').removeClass('active');
+    tab_clicked.addClass('active');
+    tab_clicked.parent('.default_tabs_head').next('.default_tabs_body').children('div').hide();
+    $('#' + tab_target).show();
+    if ($(window).width() < 768) {
+        $('html, body').animate({
+            scrollTop: $('#' + tab_target).offset().top
+        }, 500);
+    }
+});
+
+
+/**************************************************************************/
+/*                                Tooltip                                 */
+/**************************************************************************/
+function qp_design_tooltip() {
+    $('body').append('<div class="qp_design_tooltip"><span></span></div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAHCAYAAAFGq+z1AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QkYyNDg3RURCQ0JCMTFFNEI1N0Q5RDBFMkY1NDYwNDAiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QkYyNDg3RUVCQ0JCMTFFNEI1N0Q5RDBFMkY1NDYwNDAiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpCRjI0ODdFQkJDQkIxMUU0QjU3RDlEMEUyRjU0NjA0MCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpCRjI0ODdFQ0JDQkIxMUU0QjU3RDlEMEUyRjU0NjA0MCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pka64X8AAABpSURBVHjaYmRgYDgDxAwAAQRCZwACCIUBEECMyCJsQLwBIIAY0dUBQRYSm2EijAEQQIxoqsCACYjz0cRMYIx92HSAQBmMARBgIDPFgHgbA37gA7LnFdTsHVgUrITKvUCXsIK6AYSVkCUAdaUPzdodFnUAAAAASUVORK5CYII=" class="qp_design_tooltip_down" />');
+    $('[data-title]').mouseenter(function () {
+        if ($(window).width() > 1100) {
+            $('.qp_design_tooltip').show();
+            $('.qp_design_tooltip_down').show();
+            $('.qp_design_tooltip span').html($(this).data('title'));
+            $('.qp_design_tooltip').css({'left': ($(this).offset().left + ($(this).width() / 2) - ($('.qp_design_tooltip').width() / 2)) + (parseInt($(this).css('padding-left'))) - 6});
+            $('.qp_design_tooltip').css({'top': $(this).offset().top + $('.qp_design_tooltip').height() + 20});
+            $('.qp_design_tooltip_down').css({
+                'top': ($('.qp_design_tooltip').offset().top - 19),
+                'left': ($('.qp_design_tooltip').offset().left + ($('.qp_design_tooltip').width() / 2))
+            });
+        }
+    });
+    $('[data-title]').mouseleave(function () {
+        $('.qp_design_tooltip').hide();
+        $('.qp_design_tooltip_down').hide();
+    });
+
+    $('[data-tooltip]').focus(function () {
+        $('.qp_design_tooltip').show();
+        $('.qp_design_tooltip_down').show();
+        $('.qp_design_tooltip span').html($(this).data('tooltip'));
+        $('.qp_design_tooltip').css({
+            'left': ($(this).offset().left + ($(this).width() / 2) - ($('.qp_design_tooltip').width() / 2)) + (parseInt($(this).css('padding-left'))) - 6,
+            'top': $(this).offset().top - $('.qp_design_tooltip').height() - 20
+        });
+        $('.qp_design_tooltip_down').css({
+            'top': ($('.qp_design_tooltip').offset().top + $('.qp_design_tooltip').height()),
+            'left': ($('.qp_design_tooltip').offset().left + ($('.qp_design_tooltip').width() / 2))
+        });
+    });
+    $('[data-tooltip]').focusout(function () {
+        $('.qp_design_tooltip').hide();
+        $('.qp_design_tooltip_down').hide();
+    });
+}
+
+
+/**************************************************************************/
+/*                   scroll navigator for single pages                    */
+/**************************************************************************/
+/*
+ just add <div class="scroll_navigator"></div> to page
+ */
+$(document).ready(function () {
+    if ($(".scroll_navigator").length) {
+        var scroll_navigator_listener;
+        $(window).scroll(function () {
+            scroll_navigator_listener = $(window).scrollTop();
+            var bigger_index = 0;
+            $('section').each(function () {
+                if (scroll_navigator_listener >= $(this).offset().top + 10) {
+                    bigger_index = $(this).index() - 1;
+                    if (bigger_index == -1) {
+                        bigger_index = 0;
+                    }
+                }
+            });
+            $('.scroll_navigator_bullet').removeClass('scroll_navigator_bullet_active');
+            $('.scroll_navigator_bullet').eq(bigger_index).addClass('scroll_navigator_bullet_active');
+
+            if (scroll_navigator_listener < 200 || scroll_navigator_listener > ($(document).height() - 1000)) {
+                $('.scroll_navigator').hide();
+            } else {
+                $('.scroll_navigator').show();
+            }
+        });
+        var scroll_navigation_counter = 0;
+        $('section').each(function () {
+            $('.scroll_navigator').append('<div class="scroll_navigator_bullet">&#9679;</div>');
+            if (scroll_navigation_counter == 0) {
+                $('.scroll_navigator_bullet').addClass('scroll_navigator_bullet_active');
+            }
+            scroll_navigation_counter++;
+        });
+        $(document).on('click', '.scroll_navigator_bullet', function () {
+            var get_clicked_bullet = $(this);
+            var obtained_section_index = $('.scroll_navigator_bullet').index(get_clicked_bullet);
+            $('body,html').animate({scrollTop: $('section').eq(obtained_section_index+1).offset().top - 1}, 1000);
+        });
+        $('.scroll_navigator').css({'top': ($(window).height() - $('.scroll_navigator').height()) / 2});
+    }
+});
+
+
+/**************************************************************************/
+/*                                  Review                                */
+/**************************************************************************/
+$(document).on('click', '#push_review', function () {
+    if ($('.coment_textarea').val() != '') {
+        var push_review_this = $(this);
+        $('.coment_textarea,#push_review').slideUp(300, function () {
+        });
+        $.ajax({
+            type: 'POST',
+            url: 'http://nt.parsonline.com/misc/review/push_review.php',
+            crossDomain: true,
+            data: {
+                id: push_review_this.data('id'),
+                comment: $('.coment_textarea').val(),
+                cat: push_review_this.parent().data('namespace'),
+                prodname: push_review_this.parent().data('prodname')
+            },
+            dataType: 'json',
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (result) {
+                $('#you_first_review').remove();
+                $('.reviews').prepend('<div class="each_review"><div class="each_review_title">' + result.user + '</div><div class="each_review_comment">' + result.comment + '</div><div class="vote_review" data-id="' + result.id + '"><div class="vote_review_cover" ></div><span class="glyphicon like_review glyphicon-thumbs-up"></span>  <span class="like_container" >0</span>  &nbsp; &nbsp; <span class="glyphicon dislike_review glyphicon-thumbs-down"></span> <span class="dislike_container" >0</span></div></div>').slideDown();
+            }
+        });
+    }
+});
+
+$(document).on('click', '.like_review', function (result) {
+    $('.vote_review_cover').fadeIn();
+    var this_review_vote_id = $(this).parent().data('id');
+    $.ajax({
+        type: 'POST',
+        url: 'http://nt.parsonline.com/misc/review/push_vote.php',
+        crossDomain: true,
+        data: {id: this_review_vote_id, act: 'like'},
+        dataType: 'text',
+        xhrFields: {
+            withCredentials: true
+        },
+        success: function (result) {
+            $('.vote_review_cover').fadeOut();
+            if (result == 'like') {
+                $('.vote_review[data-id="' + this_review_vote_id + '"]').find('.like_container').html(parseInt($('.vote_review[data-id="' + this_review_vote_id + '"]').find('.like_container').html()) + 1);
+            } else if (result == 'like_dislike') {
+                $('.vote_review[data-id="' + this_review_vote_id + '"]').find('.dislike_container').html(parseInt($('.vote_review[data-id="' + this_review_vote_id + '"]').find('.dislike_container').html()) - 1);
+                $('.vote_review[data-id="' + this_review_vote_id + '"]').find('.like_container').html(parseInt($('.vote_review[data-id="' + this_review_vote_id + '"]').find('.like_container').html()) + 1);
+            }
+        }
+    });
+});
+
+$(document).on('click', '.dislike_review', function (result) {
+    $('.vote_review_cover').fadeIn();
+    var this_review_vote_id = $(this).parent().data('id');
+    $.ajax({
+        type: 'POST',
+        url: 'http://nt.parsonline.com/misc/review/push_vote.php',
+        crossDomain: true,
+        data: {id: this_review_vote_id, act: 'dislike'},
+        dataType: 'text',
+        xhrFields: {
+            withCredentials: true
+        },
+        success: function (result) {
+            $('.vote_review_cover').fadeOut();
+            if (result == 'dislike') {
+                $('.vote_review[data-id="' + this_review_vote_id + '"]').find('.dislike_container').html(parseInt($('.vote_review[data-id="' + this_review_vote_id + '"]').find('.dislike_container').html()) + 1);
+            } else if (result == 'dislike_like') {
+                $('.vote_review[data-id="' + this_review_vote_id + '"]').find('.like_container').html(parseInt($('.vote_review[data-id="' + this_review_vote_id + '"]').find('.like_container').html()) - 1);
+                $('.vote_review[data-id="' + this_review_vote_id + '"]').find('.dislike_container').html(parseInt($('.vote_review[data-id="' + this_review_vote_id + '"]').find('.dislike_container').html()) + 1);
+            }
+        }
+    });
+});
+
+$(document).ready(function () {
+    if (($('.review')[0])) {
+        $('.review').html('<div class="alert_loader loader" ></div>');
+        $('.review').each(function () {
+            this_page_review = $(this);
+            this__page_review_cat = $(this).data('namespace');
+            this__page_review_prodname = $(this).data('prodname');
+            this__page_review_id = $(this).data('id');
+            $.ajax({
+                type: 'POST',
+                url: 'http://nt.parsonline.com/misc/review/get_review.php',
+                cache: false,
+                crossDomain: true,
+                data: {
+                    id: this__page_review_id,
+                    cat: this__page_review_cat,
+                    prodname: this__page_review_prodname,
+                    return_url: window.location.href
+                },
+                xhrFields: {
+                    withCredentials: true
+                },
+                success: function (result) {
+                    this_page_review.html(result);
+                }
+            });
+        });
+    }
+});
+
+
+/**************************************************************************/
+/*                           CountDown timer                             **/
+/**************************************************************************/
+/*  <div class="qp_countdown" data-time="5465" data-callback="callbackFunction" data-type="countDown"></div> */
+/* Available types=[flipClock,countDown,static] */
+$(document).ready(function () {
+    trigger_qpcountdown();
+});
+
+/* This function seperates digits */
+function seperate_digit(arg) {
+    var number = arg, output = '', sNumber = number.toString();
+    var len = sNumber.length;
+    for (var i = 0; i < len; i++) {
+        output = "<div class='each_digit'>" + sNumber.charAt(i) + "</div>" + output;
+    }
+    return output;
+}
+
+function trigger_qpcountdown() {
+    /* Do the change for all countdowns in the page */
+    $('.qp_countdown').each(function () {
+        var countdown_time_init = $(this).data('time');
+        var countdown = $(this);
+        var countdown_interval = setInterval(function () {
+            if (countdown.data('type') == 'flipClock') {
+                var countdown_time = countdown_time_init;
+                if (countdown_time >= 0) {
+                    var countdown_day = Math.floor(countdown_time / 86400);
+                    if (countdown_day < 10) {
+                        countdown_day = '0' + countdown_day;
+                    }
+                    countdown_time = countdown_time - (countdown_day * 86400);
+                    var countdown_hour = Math.floor(countdown_time / 3600);
+                    if (countdown_hour < 10) {
+                        countdown_hour = '0' + countdown_hour;
+                    }
+                    countdown_time = countdown_time - (countdown_hour * 3600);
+                    var countdown_minute = Math.floor(countdown_time / 60);
+                    if (countdown_minute < 10) {
+                        countdown_minute = '0' + countdown_minute;
+                    }
+                    countdown_time = countdown_time - (countdown_minute * 60);
+                    var countdown_second = countdown_time;
+                    if (countdown_second < 10) {
+                        countdown_second = '0' + countdown_second;
+                    }
+                    countdown_time_init--;
+                    countdown.html('<div>' + seperate_digit(countdown_day) + '</div> | <div>' + seperate_digit(countdown_hour) + '</div>:<div>' + seperate_digit(countdown_minute) + '</div>:<div>' + seperate_digit(countdown_second) + '</div>');
+                } else {
+                    var callback_function = countdown.data('callback');
+                    if (typeof callback_function !== 'undefined') {
+                        window[callback_function]();
+                        clearInterval(countdown_interval);
+                    }
+                }
+            } else if (countdown.data('type') == 'countDown') {
+                var countdown_time = countdown_time_init;
+                if (countdown_time >= 0) {
+                    countdown_time_init--;
+                    countdown.html('<div>' + seperate_digit(countdown_time) + '</div>');
+                } else {
+                    var callback_function = countdown.data('callback');
+                    if (typeof callback_function !== 'undefined') {
+                        window[callback_function]();
+                        clearInterval(countdown_interval);
+                    }
+                }
+            } else if (countdown.data('type') == 'static') {
+                var countdown_time = countdown_time_init;
+                countdown.html('<div>' + seperate_digit(countdown_time) + '</div>');
+            }
+        }, 1000);
+    });
+}
+
+/**************************************************************************/
+/*                              TV loader                                **/
+/**************************************************************************/
+/*
+$(document).ready(function () {
+    var video_load = [];
+    $('.video_load').each(function () {
+        var each_video = $(this);
+        if (each_video.data('response') != undefined) {
+            $.get('http://tv.parsonline.com/tools/api-reader/get_video.php', {video_id: each_video.data('id')}, function (result) {
+                video_load_response(result);
+            });
+        } else {
+            $.get('http://tv.parsonline.com/tools/api-reader/get_video.php', {video_id: each_video.data('id')}, function (result) {
+            });
+        }
+
+    });
+
+    $(document).on('click', '.video_load', function () {
+        var this_spec_video = $(this);
+        $.getJSON('http://tv.parsonline.com/tools/api-reader/get_video.php', {video_id: this_spec_video.data('id')}, function (result) {
+            if ($(window).width() > 1000) {
+                alert('<iframe class="tv_iframe" src="http://tv.parsonline.com/embed.php?id=' + this_spec_video.data('id') + '" style="width: 640px;height: 360px;overflow: hidden;border: 1px solid #161616" scrolling="no" seamless="seamless" allowfullscreen></iframe>', result.title);
+            } else {
+                if ($(window).width() > $(window).height()) {
+                    alert('<div style="text-align: center"><iframe class="tv_iframe" src="http://tv.parsonline.com/embed.php?id=' + this_spec_video.data('id') + '" style="width: 320px;height:180px;overflow: hidden;border: 1px solid #161616" scrolling="no" seamless="seamless" allowfullscreen></iframe></div>', result.title);
+                } else {
+                    alert('<div style="text-align: center"><iframe class="tv_iframe" src="http://tv.parsonline.com/embed.php?id=' + this_spec_video.data('id') + '" style="width: 250px;height:140px ;overflow: hidden;border: 1px solid #161616" scrolling="no" seamless="seamless" allowfullscreen></iframe></div>', result.title);
+                }
+            }
+        });
+    });
+});
+*/
+function convert_to_fanum(arg) {
+    fa_num(arg);
+}
+
+function en_num(arg) {
+    var string = arg.toString();
+    string = string.replaceAll("۱", "1");
+    string = string.replaceAll("۲", "2");
+    string = string.replaceAll("۳", "3");
+    string = string.replaceAll("۴", "4");
+    string = string.replaceAll("۵", "5");
+    string = string.replaceAll("۶", "6");
+    string = string.replaceAll("۷", "7");
+    string = string.replaceAll("۸", "8");
+    string = string.replaceAll("۹", "9");
+    string = string.replaceAll("۰", "0");
+    return string;
+}
