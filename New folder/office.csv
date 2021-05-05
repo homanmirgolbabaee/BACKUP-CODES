@@ -1,0 +1,4 @@
+"ELF(A)","ELF(B)","A Says (about B)","B Says(about A)"
+"Honest","Honest","Honest","Honest"
+"Honest","Liar","Liar","Either"
+"Liar","Honest","Either","Liar"
